@@ -1,5 +1,6 @@
 package com.nbp.bear.components.configuration;
 
+import com.nbp.bear.components.constant.NbpEndPoint;
 import com.nbp.bear.components.filter.NbpFilter;
 import com.nbp.bear.components.service.NbpUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class NbpSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/v1/api/login")
+        http.csrf().disable().authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_LOGIN)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

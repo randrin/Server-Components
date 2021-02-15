@@ -2,15 +2,22 @@
 **** Set Up Spring Boot Project ****
 ---
 1) Create Spring Boot project in the IDE
-2) When creating, Add the basis dependencies: Jpa, Security, MySql, Lombok, Spring Web [see the pom.xml]
-3) Create some packages: configuration, repository, controller, model, service, util
+2) When creating, Add the basic dependencies: Jpa, Security, MySql, Lombok, Spring Web [see the pom.xml]
+3) Create some packages: configuration, repository, controller, model, service, util, filter, etc...
+
+---
+**** Configuration application.yaml  ****
+---
+1) Go to the resources folder
+2) Create the application.yaml or application.yml [In my case, i rename the application.properties created by Spring boot automatically]
+3) Make some configurations, like set up database, server port, etc... [Some configurations will be added later]
 
 ---
 **** Model Class NbpUser ****
 ---
 1) Create the NbpUser class in the model package
-2) Add the some basic fields: id, username, password, email, etc...
-3) Add annotations to generate getters and setters, constructors, entity table
+2) Add some basic fields: id, userName, password, email, etc...
+3) Add annotations to generate getters and setters [@Data -> Lombok], constructors [@AllArgsConstructor, @NoArgsConstructor -> Lombok], entity table
 
 ---
 **** Security Configuration ****
