@@ -2,28 +2,28 @@
 **** Set Up Spring Boot Project ****
 ---
 1) Create Spring Boot project in the IDE
-2) When creating, Add the basis dependences: Jpa, Security, MySql, Lombok, Spring Web [see the pom.xml]
-3) Create some packages: configuration, controller, model, service, util
+2) When creating, Add the basis dependencies: Jpa, Security, MySql, Lombok, Spring Web [see the pom.xml]
+3) Create some packages: configuration, repository, controller, model, service, util
 
 ---
 **** Model Class NbpUser ****
 ---
 1) Create the NbpUser class in the model package
 2) Add the some basic fields: id, username, password, email, etc...
-3) Add annotations to generate getter and setter, constructors, entity table
+3) Add annotations to generate getters and setters, constructors, entity table
 
 ---
-**** Actuator for monitoring service ****
+**** Security Configuration ****
 ---
-1) Add the dependency actuator starter
-2) Restart the application and go to loacalhost:port/actuactor
-3) Configure the application.yaml for the Business Logic
+1) Create the NbpSecurityConfiguration class in the configuration package
+2) Add the configuration annotations [@Configuration, @EnableWebSecurity] 
+3) Override the configure method [This method call the authentification security, but we need to persist with our service NbpUserDetailsService in agreement with the Business Logic]
 
 ---
-**** Registration Microservice in Admin Server ****
+**** Service NbpUserDetailsService ****
 ---
-1) Add the dependency admin client
-2) Configure the application.properties (application.yaml) registering with the url of admin server
+1) Create the service NbpUserDetailsService and implements the UserDetailsService
+2) Override the loadUserByUsername method [This method call the model user and get the informations of user in database]
 
 ---
 **** Notifications Microservice in Admin Server ****
