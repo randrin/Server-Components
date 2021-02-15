@@ -26,10 +26,10 @@
 2) Override the loadUserByUsername method [This method call the model user and get the informations of user in database]
 
 ---
-**** Notifications Microservice in Admin Server ****
+**** Controller NbpUserController ****
 ---
-1) Add the dependency in admin server [spring-boot-starter-mail]
-2) Configure the application.properties (application.yaml) registering with the port, host, domain etc.. of the server
+1) Create the controller NbpUserController in the controller package
+2) Implements some basic endpoints to call the data in database
 
 ---
 **** Data Persistence and Clustering with Hazelcast in SBA Server ****
