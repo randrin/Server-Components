@@ -1,6 +1,7 @@
 package com.nbp.bear.components.controller;
 
 import com.nbp.bear.components.constant.NbpConstant;
+import com.nbp.bear.components.constant.NbpResponse;
 import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.request.NbpUserRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,15 +45,14 @@ public class NbpAuthController {
             );
             final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
             final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
-            return new ResponseEntity<Object>(new NbpUserResponse("User logged successfully.", jwtToken), HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_LOGGED, jwtToken), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<Object>(new NbpUserResponse("Bad Credentials: Username/Password incorrects", ""), HttpStatus.BAD_REQUEST);
-
+            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_LOGIN, ""), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/register")
-    public String NbpUserRegister (@RequestBody NbpUser nbpUser) {
+    public ResponseEntity<Object> NbpUserRegister (@RequestBody @Valid NbpUser nbpUser) {
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);

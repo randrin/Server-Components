@@ -28,12 +28,12 @@ public class NbpSwaggerConfiguration {
 
     private ApiInfo getApiInfos() {
         return new ApiInfo(
-                "Products Microservices",
-                "Products Microservices of Ecommerce Vendors",
-                "v1.0.0", "https://github.com/randrin/eStore-product-v1",
-                new Contact("Randrin Nzeukang", "https://randrin-nzeukang.netlify.app/#about_me", "nzeukangrandrin@gmail.com"),
+                "Nbp Microservices",
+                "Microservices for Angular Components Integration",
+                "v1.0.0", "https://github.com/randrin/Server-Components",
+                new Contact("IT Software Vigevano", "https://randrin-nzeukang.netlify.app/#about_me", "nzeukangrandrin@gmail.com"),
                 "Terms of Use Licence",
-                "https://github.com/randrin/eStore-product-v1/blob/master/README.md",
+                "https://github.com/randrin/Server-Components/blob/master/README.md",
                 Collections.emptyList());
     }
 }
