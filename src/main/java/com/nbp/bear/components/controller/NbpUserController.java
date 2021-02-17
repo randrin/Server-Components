@@ -1,20 +1,14 @@
 package com.nbp.bear.components.controller;
 
-import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.model.NbpUser;
-import com.nbp.bear.components.request.NbpUserRequest;
-import com.nbp.bear.components.response.NbpJwtResponse;
-import com.nbp.bear.components.service.NbpUserDetailsService;
 import com.nbp.bear.components.service.NbpUserService;
-import com.nbp.bear.components.util.NbpJwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
@@ -24,19 +18,7 @@ import java.util.List;
 public class NbpUserController {
 
     @Autowired
-    private NbpJwtUtil nbpJwtUtil;
-
-    @Autowired
     private NbpUserService nbpUserService;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private NbpUserDetailsService nbpUserDetailsService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @GetMapping("/welcome")
     public String Welcome() {
@@ -54,27 +36,6 @@ public class NbpUserController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public String testUserAccess() {
         return "user can only access this !";
-    }
-
-    @PostMapping("/login")
-    public NbpJwtResponse NbpUserLogin(@RequestBody NbpUserRequest nbpUserRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(nbpUserRequest.getUserName(), nbpUserRequest.getPassword())
-            );
-            final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
-            final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
-            return new NbpJwtResponse(jwtToken);
-        } catch (Exception ex) {
-            throw new Exception("Invalid username/password");
-        }
-    }
-
-    @PostMapping("/register")
-    public String NbpUserRegister (@RequestBody NbpUser nbpUser) {
-        nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
-        nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
-        return nbpUserService.NbpUserRegisterService(nbpUser);
     }
 
     //If loggedin user is ADMIN -> ADMIN OR MODERATOR
