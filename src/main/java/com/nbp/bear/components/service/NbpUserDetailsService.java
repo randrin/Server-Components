@@ -2,14 +2,14 @@ package com.nbp.bear.components.service;
 
 import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.repository.NbpUserRepository;
+import com.nbp.bear.components.util.NbpUserDetailsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class NbpUserDetailsService implements UserDetailsService {
@@ -19,7 +19,8 @@ public class NbpUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        NbpUser nbpUser = nbpUserRepository.findByUserName(username);
-        return new User(nbpUser.getUserName(), nbpUser.getPassword(), new ArrayList<>());
+        Optional<NbpUser> nbpUser = nbpUserRepository.findByUserName(username);
+        return nbpUser.map(NbpUserDetailsUtil::new)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " Not Found"));
     }
 }

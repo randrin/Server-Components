@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -21,22 +23,32 @@ public class ServerComponentsApplication {
 	@Autowired
 	private NbpUserRepository nbpUserRepository;
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@PostConstruct
 	public void initUsers() {
 		List<NbpUser> users = Stream.of(
-				new NbpUser(1, "Randrino", "123456789", "nzeukangrandrin@gmail.com"),
-				new NbpUser(2, "Rodrigo", "123456789", "djomoutresor1@gmail.com"),
-				new NbpUser(3, "Alino", "123456789", "alino@gmail.com")
+				new NbpUser(1, "Randrino", bCryptPasswordEncoder.encode("123456789"), "nzeukangrandrin@gmail.com", true, "ROLE_USER,ROLE_ADMIN"),
+				new NbpUser(2, "Rodrigo", bCryptPasswordEncoder.encode("123456789"), "djomoutresor1@hotmail.fr", true, "ROLE_USER,ROLE_ADMIN"),
+				new NbpUser(3, "Alino", bCryptPasswordEncoder.encode("123456789"), "alino@gmail.com", false, "ROLE_USER")
 		).collect(Collectors.toList());
 		nbpUserRepository.saveAll(users);
+	}
+
+	@Bean
+	WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("*");
+			}
+		};
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServerComponentsApplication.class, args);
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder () {
-		return NoOpPasswordEncoder.getInstance();
-	}
 }
