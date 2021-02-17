@@ -1,5 +1,6 @@
 package com.nbp.bear.components.controller;
 
+import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.service.NbpUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class NbpUserController {
     }
 
     @GetMapping("/users")
-    @Secured("ROLE_ADMIN")
+    @Secured(NbpConstant.NBP_ROLE_ADMIN)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<NbpUser> NbpLoadUsers() {
         return nbpUserService.NbpGetAllUsers();
