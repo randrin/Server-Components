@@ -1,11 +1,9 @@
 spring:
-  profiles:
-    active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nbp_components
-    username: root
-    password: root
+    url: jdbc:mysql://nbpdb.cer3vvelnajk.eu-central-1.rds.amazonaws.com:3306/nbp
+    username: randrin
+    password: passaporto2003
   jpa:
     show-sql: true
     hibernate:
@@ -14,4 +12,4 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
 server:
-  port: 9192
+  port: 5000
