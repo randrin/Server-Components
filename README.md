@@ -11,6 +11,7 @@
 1) Go to the resources folder
 2) Create the application.yaml or application.yml [In my case, i rename the application.properties created by Spring boot automatically]
 3) Make some configurations, like set up database, server port, etc... [Some configurations will be added later]
+4) Create the profile active prod and the application-prod.yaml [This configuration is the process to deploy the application in AWS Elastic Beanstalk. When working in local, delete the prod and make it empty]
 
 ---
 **** Model Class NbpUser ****
