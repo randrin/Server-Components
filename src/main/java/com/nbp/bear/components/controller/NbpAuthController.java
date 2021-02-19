@@ -15,8 +15,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api")
@@ -40,19 +44,24 @@ public class NbpAuthController {
     @PostMapping("/login")
     public ResponseEntity<Object> NbpUserLogin(@RequestBody NbpUserRequest nbpUserRequest) throws Exception {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(nbpUserRequest.getUserName(), nbpUserRequest.getPassword())
-            );
             final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
-            final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
-            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_LOGGED, jwtToken), HttpStatus.OK);
+            if (nbpUser.isEnabled()) {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(nbpUserRequest.getUserName(), nbpUserRequest.getPassword())
+                );
+                final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
+                return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_LOGGED, jwtToken), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_DISABLE, ""), HttpStatus.UNAUTHORIZED);
+            }
+
         } catch (Exception ex) {
             return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_LOGIN, ""), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> NbpUserRegister (@RequestBody @Valid NbpUser nbpUser) {
+    public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUser nbpUser) {
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);

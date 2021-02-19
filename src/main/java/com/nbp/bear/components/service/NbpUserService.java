@@ -5,9 +5,12 @@ import com.nbp.bear.components.constant.NbpResponse;
 import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.repository.NbpUserRepository;
 import com.nbp.bear.components.response.NbpUserResponse;
+import com.nbp.bear.components.util.NbpJwtUtil;
+import com.nbp.bear.components.util.NbpUserDetailsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -23,6 +26,9 @@ public class NbpUserService {
     @Autowired
     private NbpUserRepository nbpUserRepository;
 
+    @Autowired
+    private NbpJwtUtil nbpJwtUtil;
+
     public List<NbpUser> NbpGetAllUsers() {
         return nbpUserRepository.findAll();
     }
@@ -32,7 +38,7 @@ public class NbpUserService {
 
         if (!userByUserName.isPresent()) {
             Optional<NbpUser> userByEmail = nbpUserRepository.findByEmail(nbpUser.getEmail());
-            if(!userByEmail.isPresent()) {
+            if (!userByEmail.isPresent()) {
                 nbpUserRepository.save(nbpUser);
                 return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_CREATED, ""), HttpStatus.CREATED);
             }
@@ -67,5 +73,19 @@ public class NbpUserService {
         }
         nbpUserRepository.save(nbpUser);
         return "Hi " + nbpUser.getUserName() + " New Role assign to you by " + principal.getName();
+    }
+
+    public ResponseEntity<Object> NbpUserByTokenService(String token) {
+        try {
+            String username = nbpJwtUtil.extractUsername(token);
+            Optional<NbpUser> nbpUser = nbpUserRepository.findByUserName(username);
+            if(nbpUser.isPresent()) {
+                return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_FOUND, ""), HttpStatus.FOUND);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_FOUND, ""), HttpStatus.FOUND);
+        }
     }
 }
