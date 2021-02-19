@@ -46,6 +46,7 @@ public class NbpSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_REGISTER).permitAll();
         http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
         http.addFilterBefore(nbpFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors();
     }
 
     @Bean
