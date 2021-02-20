@@ -3,7 +3,8 @@ package com.nbp.bear.components.controller;
 import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.constant.NbpResponse;
 import com.nbp.bear.components.model.NbpUser;
-import com.nbp.bear.components.request.NbpUserRequest;
+import com.nbp.bear.components.request.NbpUserLoginRequest;
+import com.nbp.bear.components.request.NbpUserRegisterRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
 import com.nbp.bear.components.service.NbpUserDetailsService;
 import com.nbp.bear.components.service.NbpUserService;
@@ -42,7 +43,7 @@ public class NbpAuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> NbpUserLogin(@RequestBody NbpUserRequest nbpUserRequest) throws Exception {
+    public ResponseEntity<Object> NbpUserLogin(@RequestBody NbpUserLoginRequest nbpUserRequest) throws Exception {
         try {
             final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
             if (nbpUser.isEnabled()) {
@@ -52,16 +53,16 @@ public class NbpAuthController {
                 final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
                 return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_LOGGED, jwtToken), HttpStatus.OK);
             } else {
-                return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_DISABLE, ""), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_DISABLE, HttpStatus.UNAUTHORIZED);
             }
-
         } catch (Exception ex) {
-            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_ERROR_LOGIN, ""), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_LOGIN, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUser nbpUser) {
+    public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUserRegisterRequest nbpUserRequest) {
+        NbpUser nbpUser = new NbpUser(0, nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);

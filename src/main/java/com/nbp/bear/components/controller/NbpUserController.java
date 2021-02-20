@@ -2,16 +2,15 @@ package com.nbp.bear.components.controller;
 
 import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.model.NbpUser;
+import com.nbp.bear.components.request.NbpUserUpdateRequest;
 import com.nbp.bear.components.service.NbpUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +53,17 @@ public class NbpUserController {
     @GetMapping("/user/{token}")
     public ResponseEntity<Object> NbpGetUser(@PathVariable String token) throws Exception {
         return nbpUserService.NbpUserByTokenService(token);
+    }
+
+    @PutMapping("/user/update/{id}")
+    public ResponseEntity<Object> NbpUpdateUser(@PathVariable int id, @RequestBody @Valid NbpUserUpdateRequest nbpUserRequest) {
+        return nbpUserService.NbpUserUpdateService(id, nbpUserRequest);
+    }
+
+    @DeleteMapping("/user/delete/{id}")
+    @Secured(NbpConstant.NBP_ROLE_ADMIN)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Object> NbpDeleteUser(@PathVariable int id) {
+        return nbpUserService.NbpUserDeleteService(id);
     }
 }

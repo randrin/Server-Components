@@ -1,5 +1,6 @@
 package com.nbp.bear.components.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nbp.bear.components.constant.NbpConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class NbpUser {
     private String userName;
 
     @NotNull(message = NbpConstant.NBP_PASSWORD_REQUIRED)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotNull(message = NbpConstant.NBP_EMAIL_REQUIRED)
