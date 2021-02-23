@@ -88,9 +88,9 @@ public class NbpUserService {
         }
     }
 
-    public ResponseEntity<Object> NbpUserDeleteService(int id) {
+    public ResponseEntity<Object> NbpUserDeleteService(int userId) {
         try {
-            NbpUser nbpUser = nbpUserRepository.findById(id).get();
+            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
             nbpUserRepository.delete(nbpUser);
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_DELETED, HttpStatus.OK);
         } catch (Exception ex) {
@@ -106,6 +106,17 @@ public class NbpUserService {
             // Add some fields later
             nbpUserRepository.save(nbpUser);
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_UPDATED, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> NbpUserActivateOrDisabledService(int userId) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            nbpUser.setActive(nbpUser.isActive() ? Boolean.FALSE : Boolean.TRUE);
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(nbpUser.isActive() ? NbpResponse.NBP_USER_ACTIVATED : NbpResponse.NBP_USER_DISABLED, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }

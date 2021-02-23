@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/api")
+@CrossOrigin("*")
 public class NbpUserController {
 
     @Autowired
@@ -65,5 +66,12 @@ public class NbpUserController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Object> NbpDeleteUser(@PathVariable int id) {
         return nbpUserService.NbpUserDeleteService(id);
+    }
+
+    @PutMapping("/user/permission/{id}")
+    @Secured(NbpConstant.NBP_ROLE_ADMIN)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Object> NbpActivateOrDisabledUser(@PathVariable int id) {
+        return nbpUserService.NbpUserActivateOrDisabledService(id);
     }
 }
