@@ -92,7 +92,7 @@ public class NbpUserService {
         try {
             NbpUser nbpUser = nbpUserRepository.findById(userId).get();
             nbpUserRepository.delete(nbpUser);
-            return new ResponseEntity<Object>(NbpResponse.NBP_USER_DELETED, HttpStatus.OK);
+            return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -116,7 +116,7 @@ public class NbpUserService {
             NbpUser nbpUser = nbpUserRepository.findById(userId).get();
             nbpUser.setActive(nbpUser.isActive() ? Boolean.FALSE : Boolean.TRUE);
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(nbpUser.isActive() ? NbpResponse.NBP_USER_ACTIVATED : NbpResponse.NBP_USER_DISABLED, HttpStatus.OK);
+            return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
