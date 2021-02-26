@@ -8,6 +8,7 @@ public class NbpResponse {
     public static final String NBP_USER_LOGGED = "User logged successfully.";
     public static final String NBP_USER_DELETED = "User deleted successfully.";
     public static final String NBP_USER_UPDATED = "User updated successfully.";
+    public static final String NBP_PASSWORD_UPDATED = "User Password updated successfully.";
     public static final String NBP_USER_ACTIVATED = "User activated successfully.";
     public static final String NBP_USER_DISABLED = "User disabled successfully.";
 
