@@ -67,4 +67,5 @@ public class NbpAuthController {
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);
     }
+
 }

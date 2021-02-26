@@ -44,6 +44,8 @@ public class NbpSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_LOGIN).permitAll();
         http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_REGISTER).permitAll();
+        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_PASSWORD).permitAll();
+        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_GETPASSWORD).permitAll();
         http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
         http.addFilterBefore(nbpFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();
