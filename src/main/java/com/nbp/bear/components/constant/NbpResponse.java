@@ -15,6 +15,7 @@ public class NbpResponse {
     // ERRORS
     public static final String NBP_USER_ERROR_LOGIN = "Bad Credentials Username/Password incorrect.";
     public static final String NBP_USER_ERROR_NOT_FOUND = "User not found.";
+    public static final String NBP_USER_PASSWORD_NOT_FOUND = "User password not found.";
     public static final String NBP_USER_ERROR_DISABLE = "Your account isn't active. Contact your administration department for more information.";
 
 }
