@@ -40,7 +40,7 @@ public class NbpUserService {
             nbpUserRepository.save(nbpUser);
             return new ResponseEntity<Object>(nbpUser.getPassword(), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
