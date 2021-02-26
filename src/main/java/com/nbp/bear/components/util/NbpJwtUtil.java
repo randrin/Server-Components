@@ -49,7 +49,7 @@ public class NbpJwtUtil {
     // While creating the token -
     // 1. Define claims of the token, like Issuer, Expiration, Subject, and the ID
     // 2. Sign the JWT using the HS256 algorithm and secret key.
-    private String createToken(Map<String, Object> claims, String subject) {
+    public String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + NbpConstant.NBP_EXPIRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, NbpConstant.NBP_SECRET_KEY).compact();

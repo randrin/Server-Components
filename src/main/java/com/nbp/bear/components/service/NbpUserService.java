@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,7 +102,8 @@ public class NbpUserService {
             nbpUser.setUserName(nbpUserRequest.getUserName());
             // Add some fields later
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(NbpResponse.NBP_USER_UPDATED, HttpStatus.OK);
+            String jwtToken = nbpJwtUtil.createToken(new HashMap<>(), nbpUser.getUserName());
+            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_UPDATED, jwtToken), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
