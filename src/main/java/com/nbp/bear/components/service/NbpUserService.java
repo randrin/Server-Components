@@ -10,8 +10,10 @@ import com.nbp.bear.components.util.NbpJwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +25,33 @@ public class NbpUserService {
     private NbpUserRepository nbpUserRepository;
 
     @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private NbpJwtUtil nbpJwtUtil;
+
+    public ResponseEntity<Object> NbpGetPasswordUserService(String email) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
+            nbpUser.getPassword();
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(nbpUser.getPassword(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> NbpResetPasswordUserService(String email,String password) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
+            nbpUser.setPassword(bCryptPasswordEncoder.encode(password));
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     public List<NbpUser> NbpGetAllUsers() {
         return nbpUserRepository.findAll();
