@@ -75,22 +75,14 @@ public class NbpUserController {
         return nbpUserService.NbpUserActivateOrDisabledService(id);
     }
 
-
-    @PostMapping("/resetPassword")
+    @PostMapping("/user/resetPassword")
     public ResponseEntity<Object> NbpResetPasswordUser(@RequestBody @Valid NbpUserPasswordRequest nbpUserPasswordRequest) {
         return nbpUserService.NbpResetPasswordUserService(nbpUserPasswordRequest.getEmail(), nbpUserPasswordRequest.getPassword());
     }
 
-
-//    @PostMapping("/forgottenPassword")
-//    public ResponseEntity<Object> NbpGetPasswordUser(@RequestBody @Valid NbpUserGetForgotPasswordRequest nbpUserGetForgotPasswordRequest) {
-//        return nbpUserService.NbpGetPasswordUserService(nbpUserGetForgotPasswordRequest.getEmail());
-//    }
-
-    @PostMapping("/forgottenPassword")
-    public ResponseEntity<Object> NbpGetPasswordUser(String email) {
+    @GetMapping("/user/forgottenPassword/{email}")
+    public ResponseEntity<Object> NbpGetPasswordUser(@PathVariable String email) {
         return nbpUserService.NbpGetPasswordUserService(email);
     }
-
 }
 

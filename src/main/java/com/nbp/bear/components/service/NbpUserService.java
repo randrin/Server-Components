@@ -6,14 +6,15 @@ import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.repository.NbpUserRepository;
 import com.nbp.bear.components.request.NbpUserUpdateRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
+import com.nbp.bear.components.response.NbpUtilResponse;
 import com.nbp.bear.components.util.NbpJwtUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,11 +34,12 @@ public class NbpUserService {
     public ResponseEntity<Object> NbpGetPasswordUserService(String email) {
         try {
             NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
-            nbpUser.getPassword();
+            String nbpPwdGenerator = RandomStringUtils.random(15, NbpConstant.NBP_RANDOM_CHARS);
+            nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpPwdGenerator));
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(nbpUser.getPassword(), HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_UPDATED, nbpPwdGenerator), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_FOUND, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -46,7 +48,7 @@ public class NbpUserService {
             NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
             nbpUser.setPassword(bCryptPasswordEncoder.encode(password));
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_PASSWORD_GENERATED, nbpUser), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
