@@ -48,7 +48,7 @@ public class NbpUserService {
             NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
             nbpUser.setPassword(bCryptPasswordEncoder.encode(password));
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_PASSWORD_GENERATED, nbpUser), HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_GENERATED, nbpUser), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -145,6 +145,21 @@ public class NbpUserService {
             nbpUser.setActive(nbpUser.isActive() ? Boolean.FALSE : Boolean.TRUE);
             nbpUserRepository.save(nbpUser);
             return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> NbpChangePasswordService(int userId, String oldPassword, String newPassword) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            if(bCryptPasswordEncoder.matches(oldPassword, nbpUser.getPassword())) {
+                nbpUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+                nbpUserRepository.save(nbpUser);
+                return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_CHANGED, nbpUser), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
+            }
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }

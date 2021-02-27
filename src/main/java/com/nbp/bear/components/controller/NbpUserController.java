@@ -23,11 +23,6 @@ public class NbpUserController {
     @Autowired
     private NbpUserService nbpUserService;
 
-    @GetMapping("/welcome")
-    public String Welcome() {
-        return "Welcome to Nbp Server Components";
-    }
-
     @GetMapping("/users")
     @Secured(NbpConstant.NBP_ROLE_ADMIN)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -35,15 +30,8 @@ public class NbpUserController {
         return nbpUserService.NbpGetAllUsers();
     }
 
-    @GetMapping("/test")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public String testUserAccess() {
-        return "user can only access this !";
-    }
-
     //If loggedin user is ADMIN -> ADMIN OR MODERATOR
     //If loggedin user is MODERATOR -> MODERATOR
-
     @GetMapping("/access/{userId}/{userRole}")
     //@Secured("ROLE_ADMIN")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_MODERATOR')")
@@ -83,6 +71,11 @@ public class NbpUserController {
     @GetMapping("/user/forgottenPassword/{email}")
     public ResponseEntity<Object> NbpGetPasswordUser(@PathVariable String email) {
         return nbpUserService.NbpGetPasswordUserService(email);
+    }
+
+    @PostMapping("/user/changePassword/{id}/{oldPassword}/{newPassword}")
+    public ResponseEntity<Object> NbpChangePasswordUser(@PathVariable int id, @PathVariable String oldPassword, @PathVariable String newPassword) {
+        return nbpUserService.NbpChangePasswordService(id, oldPassword, newPassword);
     }
 }
 
