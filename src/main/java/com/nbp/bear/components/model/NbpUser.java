@@ -23,7 +23,7 @@ public class NbpUser {
 
     @Id
     @GeneratedValue
-    private int id;
+    private int id ;
 
     @NotNull(message = NbpConstant.NBP_USERNAME_REQUIRED)
     private String userName;

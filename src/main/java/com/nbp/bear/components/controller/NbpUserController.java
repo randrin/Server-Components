@@ -2,6 +2,7 @@ package com.nbp.bear.components.controller;
 
 import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.model.NbpUser;
+import com.nbp.bear.components.request.NbpUserPasswordRequest;
 import com.nbp.bear.components.request.NbpUserUpdateRequest;
 import com.nbp.bear.components.service.NbpUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/api")
@@ -74,4 +74,15 @@ public class NbpUserController {
     public ResponseEntity<Object> NbpActivateOrDisabledUser(@PathVariable int id) {
         return nbpUserService.NbpUserActivateOrDisabledService(id);
     }
+
+    @PostMapping("/user/resetPassword")
+    public ResponseEntity<Object> NbpResetPasswordUser(@RequestBody @Valid NbpUserPasswordRequest nbpUserPasswordRequest) {
+        return nbpUserService.NbpResetPasswordUserService(nbpUserPasswordRequest.getEmail(), nbpUserPasswordRequest.getPassword());
+    }
+
+    @GetMapping("/user/forgottenPassword/{email}")
+    public ResponseEntity<Object> NbpGetPasswordUser(@PathVariable String email) {
+        return nbpUserService.NbpGetPasswordUserService(email);
+    }
 }
+

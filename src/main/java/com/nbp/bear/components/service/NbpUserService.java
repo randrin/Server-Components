@@ -6,17 +6,17 @@ import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.repository.NbpUserRepository;
 import com.nbp.bear.components.request.NbpUserUpdateRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
+import com.nbp.bear.components.response.NbpUtilResponse;
 import com.nbp.bear.components.util.NbpJwtUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +26,34 @@ public class NbpUserService {
     private NbpUserRepository nbpUserRepository;
 
     @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
     private NbpJwtUtil nbpJwtUtil;
+
+    public ResponseEntity<Object> NbpGetPasswordUserService(String email) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
+            String nbpPwdGenerator = RandomStringUtils.random(15, NbpConstant.NBP_RANDOM_CHARS);
+            nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpPwdGenerator));
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_UPDATED, nbpPwdGenerator), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> NbpResetPasswordUserService(String email,String password) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
+            nbpUser.setPassword(bCryptPasswordEncoder.encode(password));
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_PASSWORD_GENERATED, nbpUser), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     public List<NbpUser> NbpGetAllUsers() {
         return nbpUserRepository.findAll();
@@ -105,7 +132,8 @@ public class NbpUserService {
             nbpUser.setUserName(nbpUserRequest.getUserName());
             // Add some fields later
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(NbpResponse.NBP_USER_UPDATED, HttpStatus.OK);
+            String jwtToken = nbpJwtUtil.createToken(new HashMap<>(), nbpUser.getUserName());
+            return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_UPDATED, jwtToken), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
