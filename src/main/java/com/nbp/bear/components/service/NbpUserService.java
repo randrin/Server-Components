@@ -37,7 +37,7 @@ public class NbpUserService {
             String nbpPwdGenerator = RandomStringUtils.random(15, NbpConstant.NBP_RANDOM_CHARS);
             nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpPwdGenerator));
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_UPDATED, nbpPwdGenerator), HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_GENERATED, nbpPwdGenerator), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -164,4 +164,5 @@ public class NbpUserService {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
+
 }
