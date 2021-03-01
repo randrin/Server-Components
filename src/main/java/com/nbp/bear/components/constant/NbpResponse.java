@@ -12,8 +12,10 @@ public class NbpResponse {
     public static final String NBP_USER_PASSWORD_CHANGED = "User Password changed successfully.";
     public static final String NBP_USER_ACTIVATED = "User activated successfully.";
     public static final String NBP_USER_DISABLED = "User disabled successfully.";
+    public static final String NBP_USER_UPDATE_PROFIL = "User Profil update successfully.";
 
     // ERRORS
+    public static final String NBP_USER_UPDATE_PROFIL_NOT_FOUND = "User Profil can't be update.";
     public static final String NBP_USER_ERROR_LOGIN = "Bad Credentials Username/Password incorrect.";
     public static final String NBP_USER_ERROR_NOT_FOUND = "User not found.";
     public static final String NBP_USER_PASSWORD_NOT_MATCH = "User old password isn't correct. Try again !!";

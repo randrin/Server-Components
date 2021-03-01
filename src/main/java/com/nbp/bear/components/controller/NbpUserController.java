@@ -73,7 +73,7 @@ public class NbpUserController {
         return nbpUserService.NbpGetPasswordUserService(email);
     }
 
-    @PostMapping("/user/changePassword/{id}/{oldPassword}/{newPassword}")
+    @PutMapping("/user/changePassword/{id}/{oldPassword}/{newPassword}")
     public ResponseEntity<Object> NbpChangePasswordUser(@PathVariable int id, @PathVariable String oldPassword, @PathVariable String newPassword) {
         return nbpUserService.NbpChangePasswordService(id, oldPassword, newPassword);
     }

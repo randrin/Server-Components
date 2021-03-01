@@ -60,7 +60,7 @@ public class NbpAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUserRegisterRequest nbpUserRequest) {
-        NbpUser nbpUser = new NbpUser(0, nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE);
+        NbpUser nbpUser = new NbpUser(0, nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE,false);
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);

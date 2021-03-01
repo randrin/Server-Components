@@ -36,5 +36,6 @@ public class NbpUser {
     private String email;
 
     private boolean isActive;
-    private String roles; // ROLE_USER, ROLE_ADMIN
+    private String roles; // ROLE_USER, ROLE_ADMIN;
+    private boolean temporaryPassword;
 }

@@ -28,11 +28,11 @@ public class ServerComponentsApplication {
 	@PostConstruct
 	public void initUsers() {
 		List<NbpUser> users = Stream.of(
-				new NbpUser(1, "Randrino", bCryptPasswordEncoder.encode("123456789"), "nzeukangrandrin@gmail.com", true, "ROLE_USER,ROLE_ADMIN"),
-				new NbpUser(2, "Rodrigo", bCryptPasswordEncoder.encode("123456789"), "djomoutresor1@hotmail.fr", true, "ROLE_USER,ROLE_ADMIN"),
-				new NbpUser(3, "Alino", bCryptPasswordEncoder.encode("123456789"), "alino@gmail.com", false, "ROLE_USER"),
-				new NbpUser(4, "Yannick", bCryptPasswordEncoder.encode("123456789"), "ayannick@gmail.com", true, "ROLE_USER"),
-				new NbpUser(5, "Hervé", bCryptPasswordEncoder.encode("123456789"), "herve@gmail.com", true, "ROLE_ADMIN")
+				new NbpUser(1, "Randrino", bCryptPasswordEncoder.encode("123456789"), "nzeukangrandrin@gmail.com", true, "ROLE_USER,ROLE_ADMIN",false),
+				new NbpUser(2, "Rodrigo", bCryptPasswordEncoder.encode("123456789"), "djomoutresor1@hotmail.fr", true, "ROLE_USER,ROLE_ADMIN",false),
+				new NbpUser(3, "Alino", bCryptPasswordEncoder.encode("123456789"), "alino@gmail.com", false, "ROLE_USER",false),
+				new NbpUser(4, "Yannick", bCryptPasswordEncoder.encode("123456789"), "ayannick@gmail.com", true, "ROLE_USER",false),
+				new NbpUser(5, "Hervé", bCryptPasswordEncoder.encode("123456789"), "herve@gmail.com", true, "ROLE_ADMIN",false)
 		).collect(Collectors.toList());
 		nbpUserRepository.saveAll(users);
 	}
