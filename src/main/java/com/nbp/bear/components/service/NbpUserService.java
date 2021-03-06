@@ -36,8 +36,9 @@ public class NbpUserService {
             NbpUser nbpUser = nbpUserRepository.findByEmail(email).get();
             String nbpPwdGenerator = RandomStringUtils.random(15, NbpConstant.NBP_RANDOM_CHARS);
             nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpPwdGenerator));
+            nbpUser.setTemporaryPassword(Boolean.FALSE);
             nbpUserRepository.save(nbpUser);
-            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_UPDATED, nbpPwdGenerator), HttpStatus.OK);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_GENERATED, nbpPwdGenerator), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -155,11 +156,21 @@ public class NbpUserService {
             NbpUser nbpUser = nbpUserRepository.findById(userId).get();
             if(bCryptPasswordEncoder.matches(oldPassword, nbpUser.getPassword())) {
                 nbpUser.setPassword(bCryptPasswordEncoder.encode(newPassword));
+                nbpUser.setTemporaryPassword(Boolean.TRUE);
                 nbpUserRepository.save(nbpUser);
                 return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_CHANGED, nbpUser), HttpStatus.OK);
             } else {
                 return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
             }
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> NbpGetUserByIdService(int userId) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
