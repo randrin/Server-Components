@@ -28,7 +28,7 @@ public class NbpSwaggerConfiguration {
 
     private ApiInfo getApiInfos() {
         return new ApiInfo(
-                "Nbp Microservices",
+                "Nbp Microservices Authorization/Authentification",
                 "Microservices for Angular Components Integration",
                 "v1.0.0", "https://github.com/randrin/Server-Components",
                 new Contact("IT Software Vigevano", "https://randrin-nzeukang.netlify.app/#about_me", "nzeukangrandrin@gmail.com"),
