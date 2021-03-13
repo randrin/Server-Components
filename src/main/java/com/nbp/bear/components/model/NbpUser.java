@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +24,11 @@ public class NbpUser {
 
     @Id
     @GeneratedValue
-    private int id ;
+    private int id;
+
+    private String userId;
+    private String fullName;
+    private String imageUrl;
 
     @NotNull(message = NbpConstant.NBP_USERNAME_REQUIRED)
     private String userName;
@@ -38,4 +43,6 @@ public class NbpUser {
     private boolean isActive;
     private String roles; // ROLE_USER, ROLE_ADMIN;
     private boolean temporaryPassword;
+    private Date lastConnexion;
+    private Date lastUpdated;
 }
