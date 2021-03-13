@@ -9,6 +9,7 @@ import com.nbp.bear.components.response.NbpUserResponse;
 import com.nbp.bear.components.service.NbpUserDetailsService;
 import com.nbp.bear.components.service.NbpUserService;
 import com.nbp.bear.components.util.NbpJwtUtil;
+import com.nbp.bear.components.util.NbpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/api")
@@ -60,7 +62,7 @@ public class NbpAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUserRegisterRequest nbpUserRequest) {
-        NbpUser nbpUser = new NbpUser(0, nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE,false);
+        NbpUser nbpUser = new NbpUser(0, NbpUtil.NbpGenerateUserId(), "Test FullName", "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-graphic-default-avatar-png-image_2813121.jpg", nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE, false, new Date(), new Date());
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);
