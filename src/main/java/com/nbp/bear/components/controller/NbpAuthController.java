@@ -3,9 +3,11 @@ package com.nbp.bear.components.controller;
 import com.nbp.bear.components.constant.NbpConstant;
 import com.nbp.bear.components.constant.NbpResponse;
 import com.nbp.bear.components.model.NbpUser;
+import com.nbp.bear.components.repository.NbpUserRepository;
 import com.nbp.bear.components.request.NbpUserLoginRequest;
 import com.nbp.bear.components.request.NbpUserRegisterRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
+import com.nbp.bear.components.response.NbpUtilResponse;
 import com.nbp.bear.components.service.NbpUserDetailsService;
 import com.nbp.bear.components.service.NbpUserService;
 import com.nbp.bear.components.util.NbpJwtUtil;
@@ -42,8 +44,11 @@ public class NbpAuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private NbpUserRepository nbpUserRepository;
+
     @PostMapping("/login")
-    public ResponseEntity<Object> NbpUserLogin(@RequestBody NbpUserLoginRequest nbpUserRequest) throws Exception {
+    public ResponseEntity<Object> NbpUserLogin(@RequestBody @Valid NbpUserLoginRequest nbpUserRequest) throws Exception {
         try {
             final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
             if (nbpUser.isEnabled()) {
@@ -62,10 +67,25 @@ public class NbpAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUserRegisterRequest nbpUserRequest) {
-        NbpUser nbpUser = new NbpUser(0, NbpUtil.NbpGenerateUserId(), "Test FullName", "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-graphic-default-avatar-png-image_2813121.jpg", nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(), false, NbpConstant.NBP_DEFAULT_ROLE, false, new Date(), new Date());
+        NbpUser nbpUser = new NbpUser(0, NbpUtil.NbpGenerateUserId(), "Test FullName",
+                "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-graphic-default-avatar-png-image_2813121.jpg",
+                nbpUserRequest.getUserName(), nbpUserRequest.getPassword(), nbpUserRequest.getEmail().toLowerCase(),
+                false, NbpConstant.NBP_DEFAULT_ROLE, false, new Date(), new Date());
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
         return nbpUserService.NbpUserRegisterService(nbpUser);
     }
 
+    @PutMapping("/logout")
+    public ResponseEntity<Object> NbpUserLogout(@RequestBody @Valid NbpUserLoginRequest nbpUserRequest) {
+        try {
+            NbpUser nbpUser = nbpUserRepository.findByUserName(nbpUserRequest.getUserName()).get();
+            // Update some Business Logic before saving the
+            nbpUser.setLastConnexion(new Date());
+            nbpUserRepository.save(nbpUser);
+            return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_LOGOUT, nbpUser), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
 }

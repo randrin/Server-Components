@@ -160,7 +160,7 @@ public class NbpUserService {
                 nbpUserRepository.save(nbpUser);
                 return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_CHANGED, nbpUser), HttpStatus.OK);
             } else {
-                return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
