@@ -45,16 +45,16 @@ public class NbpUserController {
         return nbpUserService.NbpUserByTokenService(token);
     }
 
-    @PutMapping("/user/update/{id}")
-    public ResponseEntity<Object> NbpUpdateUser(@PathVariable int id, @RequestBody @Valid NbpUserUpdateRequest nbpUserRequest) {
-        return nbpUserService.NbpUserUpdateService(id, nbpUserRequest);
+    @PutMapping("/user/update/{userId}")
+    public ResponseEntity<Object> NbpUpdateUser(@PathVariable String userId, @RequestBody @Valid NbpUserUpdateRequest nbpUserRequest) {
+        return nbpUserService.NbpUserUpdateService(userId, nbpUserRequest);
     }
 
-    @DeleteMapping("/user/delete/{id}")
+    @DeleteMapping("/user/delete/{userId}")
     @Secured(NbpConstant.NBP_ROLE_ADMIN)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Object> NbpDeleteUser(@PathVariable int id) {
-        return nbpUserService.NbpUserDeleteService(id);
+    public ResponseEntity<Object> NbpDeleteUser(@PathVariable String userId) {
+        return nbpUserService.NbpUserDeleteService(userId);
     }
 
     @PutMapping("/user/permission/{id}")

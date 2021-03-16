@@ -116,9 +116,9 @@ public class NbpUserService {
         }
     }
 
-    public ResponseEntity<Object> NbpUserDeleteService(int userId) {
+    public ResponseEntity<Object> NbpUserDeleteService(String userId) {
         try {
-            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            NbpUser nbpUser = nbpUserRepository.findByUserId(userId).get();
             nbpUserRepository.delete(nbpUser);
             return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
         } catch (Exception ex) {
@@ -126,9 +126,9 @@ public class NbpUserService {
         }
     }
 
-    public ResponseEntity<Object> NbpUserUpdateService(int userId, NbpUserUpdateRequest nbpUserRequest) {
+    public ResponseEntity<Object> NbpUserUpdateService(String userId, NbpUserUpdateRequest nbpUserRequest) {
         try {
-            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            NbpUser nbpUser = nbpUserRepository.findByUserId(userId).get();
             nbpUser.setEmail(nbpUserRequest.getEmail());
             nbpUser.setUserName(nbpUserRequest.getUserName());
             // Add some fields later
