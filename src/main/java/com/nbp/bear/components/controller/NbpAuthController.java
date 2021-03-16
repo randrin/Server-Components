@@ -49,13 +49,24 @@ public class NbpAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> NbpUserLogin(@RequestBody @Valid NbpUserLoginRequest nbpUserRequest) throws Exception {
+        boolean nbpUserActive;
+        String nbpUsername = "";
         try {
-            final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
-            if (nbpUser.isEnabled()) {
+            if (nbpUserRequest.getUserName().contains("@")) {
+                final NbpUser nbpUser = nbpUserRepository.findByEmail(nbpUserRequest.getUserName()).get();
+                nbpUserActive = nbpUser.isActive();
+                nbpUsername = nbpUser.getUserName();
+            } else {
+                final UserDetails nbpUser = nbpUserDetailsService.loadUserByUsername(nbpUserRequest.getUserName());
+                nbpUserActive = nbpUser.isEnabled();
+                nbpUsername = nbpUserRequest.getUserName();
+            }
+
+            if (nbpUserActive) {
                 authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(nbpUserRequest.getUserName(), nbpUserRequest.getPassword())
+                        new UsernamePasswordAuthenticationToken(nbpUsername, nbpUserRequest.getPassword())
                 );
-                final String jwtToken = nbpJwtUtil.generateToken(nbpUser);
+                final String jwtToken = nbpJwtUtil.generateToken(nbpUsername);
                 return new ResponseEntity<Object>(new NbpUserResponse(NbpResponse.NBP_USER_LOGGED, jwtToken), HttpStatus.OK);
             } else {
                 return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_DISABLE, HttpStatus.UNAUTHORIZED);
