@@ -116,9 +116,9 @@ public class NbpUserService {
         }
     }
 
-    public ResponseEntity<Object> NbpUserDeleteService(int userId) {
+    public ResponseEntity<Object> NbpUserDeleteService(String userId) {
         try {
-            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            NbpUser nbpUser = nbpUserRepository.findByUserId(userId).get();
             nbpUserRepository.delete(nbpUser);
             return new ResponseEntity<Object>(nbpUser, HttpStatus.OK);
         } catch (Exception ex) {
@@ -126,9 +126,9 @@ public class NbpUserService {
         }
     }
 
-    public ResponseEntity<Object> NbpUserUpdateService(int userId, NbpUserUpdateRequest nbpUserRequest) {
+    public ResponseEntity<Object> NbpUserUpdateService(String userId, NbpUserUpdateRequest nbpUserRequest) {
         try {
-            NbpUser nbpUser = nbpUserRepository.findById(userId).get();
+            NbpUser nbpUser = nbpUserRepository.findByUserId(userId).get();
             nbpUser.setEmail(nbpUserRequest.getEmail());
             nbpUser.setUserName(nbpUserRequest.getUserName());
             // Add some fields later
@@ -160,7 +160,7 @@ public class NbpUserService {
                 nbpUserRepository.save(nbpUser);
                 return new ResponseEntity<Object>(new NbpUtilResponse(NbpResponse.NBP_USER_PASSWORD_CHANGED, nbpUser), HttpStatus.OK);
             } else {
-                return new ResponseEntity<Object>(NbpResponse.NBP_USER_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_PASSWORD_NOT_MATCH, HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);

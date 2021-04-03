@@ -41,9 +41,9 @@ public class NbpJwtUtil {
     }
 
     // Generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userName);
     }
 
     // While creating the token -
