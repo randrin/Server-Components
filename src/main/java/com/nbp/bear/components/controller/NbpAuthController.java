@@ -1,15 +1,18 @@
 package com.nbp.bear.components.controller;
 
 import com.nbp.bear.components.constant.NbpConstant;
+import com.nbp.bear.components.constant.NbpEndPoint;
 import com.nbp.bear.components.constant.NbpResponse;
 import com.nbp.bear.components.model.NbpUser;
 import com.nbp.bear.components.repository.NbpUserRepository;
+import com.nbp.bear.components.request.NbpUserChangePasswordRequest;
 import com.nbp.bear.components.request.NbpUserLoginRequest;
+import com.nbp.bear.components.request.NbpUserPasswordRequest;
 import com.nbp.bear.components.request.NbpUserRegisterRequest;
 import com.nbp.bear.components.response.NbpUserResponse;
 import com.nbp.bear.components.response.NbpUtilResponse;
+import com.nbp.bear.components.service.NbpAuthService;
 import com.nbp.bear.components.service.NbpUserDetailsService;
-import com.nbp.bear.components.service.NbpUserService;
 import com.nbp.bear.components.util.NbpJwtUtil;
 import com.nbp.bear.components.util.NbpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/v1/api")
+@RequestMapping(NbpEndPoint.NBP_URL_ROOT)
 @CrossOrigin("*")
 public class NbpAuthController {
 
@@ -33,7 +36,7 @@ public class NbpAuthController {
     private NbpJwtUtil nbpJwtUtil;
 
     @Autowired
-    private NbpUserService nbpUserService;
+    private NbpAuthService nbpAuthService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -47,7 +50,7 @@ public class NbpAuthController {
     @Autowired
     private NbpUserRepository nbpUserRepository;
 
-    @PostMapping("/login")
+    @PostMapping(NbpEndPoint.NBP_URL_LOGIN)
     public ResponseEntity<Object> NbpUserLogin(@RequestBody @Valid NbpUserLoginRequest nbpUserRequest) throws Exception {
         boolean nbpUserActive;
         String nbpUsername = "";
@@ -76,7 +79,7 @@ public class NbpAuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping(NbpEndPoint.NBP_URL_REGISTER)
     public ResponseEntity<Object> NbpUserRegister(@RequestBody @Valid NbpUserRegisterRequest nbpUserRequest) {
         NbpUser nbpUser = new NbpUser(0, NbpUtil.NbpGenerateUserId(), "Test FullName",
                 "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-graphic-default-avatar-png-image_2813121.jpg",
@@ -84,10 +87,10 @@ public class NbpAuthController {
                 false, NbpConstant.NBP_DEFAULT_ROLE, false, new Date(), new Date());
         nbpUser.setRoles(NbpConstant.NBP_DEFAULT_ROLE);
         nbpUser.setPassword(bCryptPasswordEncoder.encode(nbpUser.getPassword()));
-        return nbpUserService.NbpUserRegisterService(nbpUser);
+        return nbpAuthService.NbpUserRegisterService(nbpUser);
     }
 
-    @PutMapping("/logout")
+    @PutMapping(NbpEndPoint.NBP_URL_LOGOUT)
     public ResponseEntity<Object> NbpUserLogout(@RequestBody @Valid NbpUserLoginRequest nbpUserRequest) {
         try {
             NbpUser nbpUser = nbpUserRepository.findByUserName(nbpUserRequest.getUserName()).get();
@@ -98,5 +101,20 @@ public class NbpAuthController {
         } catch (Exception ex) {
             return new ResponseEntity<Object>(NbpResponse.NBP_USER_ERROR_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/user/resetPassword")
+    public ResponseEntity<Object> NbpResetPasswordUser(@RequestBody @Valid NbpUserPasswordRequest nbpUserPasswordRequest) {
+        return nbpAuthService.NbpResetPasswordUserService(nbpUserPasswordRequest.getEmail(), nbpUserPasswordRequest.getPassword());
+    }
+
+    @GetMapping("/user/forgottenPassword/{email}")
+    public ResponseEntity<Object> NbpGetPasswordUser(@PathVariable String email) {
+        return nbpAuthService.NbpGetPasswordUserService(email);
+    }
+
+    @PutMapping("/user/changePassword/{id}")
+    public ResponseEntity<Object> NbpChangePasswordUser(@PathVariable int id, @RequestBody @Valid NbpUserChangePasswordRequest nbpRequest) {
+        return nbpAuthService.NbpChangePasswordService(id, nbpRequest.getOldPassword(), nbpRequest.getNewPassword());
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -42,10 +41,11 @@ public class NbpSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_LOGIN).permitAll();
-        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_REGISTER).permitAll();
-        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_PASSWORD).permitAll();
-        http.authorizeRequests().antMatchers(NbpEndPoint.NBP_URL_GETPASSWORD).permitAll();
+        http.authorizeRequests()
+                .antMatchers(NbpEndPoint.NBP_URL_ROOT + NbpEndPoint.NBP_URL_LOGIN,
+                        NbpEndPoint.NBP_URL_ROOT + NbpEndPoint.NBP_URL_REGISTER,
+                        NbpEndPoint.NBP_URL_ROOT + NbpEndPoint.NBP_URL_RESET_PASSWORD,
+                        NbpEndPoint.NBP_URL_ROOT + NbpEndPoint.NBP_URL_FORGOTTEN_PASSWORD).permitAll();
         http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
         http.addFilterBefore(nbpFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();

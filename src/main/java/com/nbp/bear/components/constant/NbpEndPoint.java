@@ -2,9 +2,11 @@ package com.nbp.bear.components.constant;
 
 public class NbpEndPoint {
 
-    public static final String NBP_URL_LOGIN = "/v1/api/login";
-    public static final String NBP_URL_REGISTER = "/v1/api/register";
-    public static final String NBP_URL_PASSWORD = "/v1/api/user/resetPassword/**";
-    public static final String NBP_URL_GETPASSWORD = "/v1/api/user/forgottenPassword/**";
+    public static final String NBP_URL_ROOT = "/v1/api";
+    public static final String NBP_URL_LOGIN = "/login";
+    public static final String NBP_URL_REGISTER = "/register";
+    public static final String NBP_URL_LOGOUT = "/logout";
+    public static final String NBP_URL_RESET_PASSWORD = "/user/resetPassword/**";
+    public static final String NBP_URL_FORGOTTEN_PASSWORD = "/user/forgottenPassword/**";
 
 }

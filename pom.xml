@@ -116,6 +116,7 @@
 						</executions>
 					</plugin>
 				</plugins>
+				<finalName>nbp-components-services-aws-exe</finalName>
 			</build>
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active>
